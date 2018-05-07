@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Teleport;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,12 +25,8 @@ class TPHere extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
-            return false;
-        }
-        if($this->getAPI()->getEssentialsBEPlugin()->getConfig()->get("teleporting") !== true) {
-            $sender->sendMessage(TextFormat::RED . "This command has been disabled!");
             return false;
         }
         if(!$sender instanceof Player || count($args) !== 1){
@@ -39,8 +38,8 @@ class TPHere extends BaseCommand{
             return false;
         }
         $player->teleport($sender);
-        $player->sendMessage(TextFormat::YELLOW . "Teleporting to " . $sender->getDisplayName() . "...");
-        $sender->sendMessage(TextFormat::YELLOW . "Teleporting " . $player->getDisplayName() . " to you...");
+        $player->sendMessage(TextFormat::YELLOW . "§dTeleporting to §5" . $sender->getDisplayName() . "§d...");
+        $sender->sendMessage(TextFormat::YELLOW . "§dTeleporting §5" . $player->getDisplayName() . " §dto you...");
         return true;
     }
 } 

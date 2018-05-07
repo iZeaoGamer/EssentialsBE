@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Warp;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -21,12 +24,8 @@ class DelWarp extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
-            return false;
-        }
-        if($this->getAPI()->getEssentialsBEPlugin()->getConfig()->get("warps") !== true) {
-            $sender->sendMessage(TextFormat::RED . "This command has been disabled!");
             return false;
         }
         if(count($args) !== 1){
@@ -34,15 +33,15 @@ class DelWarp extends BaseCommand{
             return false;
         }
         if(!$this->getAPI()->warpExists($args[0])){
-            $sender->sendMessage(TextFormat::RED . "[Error] Warp doesn't exists");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Warp doesn't exists");
             return false;
         }
         if(!$sender->hasPermission("essentials.warp.override.*") && !$sender->hasPermission("essentials.warp.override.$args[0]")){
-            $sender->sendMessage(TextFormat::RED . "[Error] You can't delete this warp");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2You can't delete this warp");
             return false;
         }
         $this->getAPI()->removeWarp($args[0]);
-        $sender->sendMessage(TextFormat::GREEN . "Warp successfully removed!");
+        $sender->sendMessage(TextFormat::GREEN . "§dWarp successfully removed!");
         return true;
     }
 } 

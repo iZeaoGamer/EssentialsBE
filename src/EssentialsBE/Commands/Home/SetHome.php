@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Home;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,12 +25,8 @@ class SetHome extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
-            return false;
-        }
-        if($this->getAPI()->getEssentialsBEPlugin()->getConfig()->get("homes") !== true) {
-            $sender->sendMessage(TextFormat::RED . "This command has been disabled!");
             return false;
         }
         if(!$sender instanceof Player || count($args) !== 1){
@@ -35,17 +34,17 @@ class SetHome extends BaseCommand{
             return false;
         }
         if(strtolower($args[0]) === "bed"){
-            $sender->sendMessage(TextFormat::RED . "[Error] You can only set a \"bed\" home by sleeping in a bed");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2You can only set a \"bed\" home by sleeping in a bed");
             return false;
-        }elseif(trim($args[0] === "")){
-            $sender->sendMessage(TextFormat::RED . "[Error] Please provide a Home name");
+        }elseif(trim($args[0]) === ""){
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Please provide a Home name");
             return false;
         }
         if(!$this->getAPI()->setHome($sender, strtolower($args[0]), $sender->getLocation(), $sender->getYaw(), $sender->getPitch())){
-            $sender->sendMessage(TextFormat::RED . "Invalid home name given! Please be sure to only use alphanumerical characters and underscores");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Invalid home name given! Please be sure to only use alphanumerical characters and underscores");
             return false;
         }
-        $sender->sendMessage(TextFormat::GREEN . "Home successfully " . ($this->getAPI()->homeExists($sender, $args[0]) ? "updated" : "created"));
+        $sender->sendMessage(TextFormat::GREEN . "§dHome has been successfully " . ($this->getAPI()->homeExists($sender, $args[0]) ? "§5updated" : "§3created"));
         return true;
     }
 } 

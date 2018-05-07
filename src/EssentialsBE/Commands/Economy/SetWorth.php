@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Economy;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -23,7 +26,7 @@ class SetWorth extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -31,13 +34,13 @@ class SetWorth extends BaseCommand{
             $this->sendUsage($sender, $alias);
             return false;
         }elseif(!is_numeric($args[0]) || (int) $args[0] < 0){
-            $sender->sendMessage(TextFormat::RED . "[Error] Please provide a valid worth");
+            $sender->sendMessage(TextFormat::RED . "[Error] ยง2Please provide a valid worth");
             return false;
         }elseif(($id = $sender->getInventory()->getItemInHand()->getId()) === Item::AIR){
-            $sender->sendMessage(TextFormat::RED . "[Error] Please provide a valid item");
+            $sender->sendMessage(TextFormat::RED . "[Error] ยง2Please provide a valid item");
             return false;
         }
-        $sender->sendMessage(TextFormat::YELLOW . "Setting worth...");
+        $sender->sendMessage(TextFormat::YELLOW . "ยง5Setting worth...");
         $this->getAPI()->setItemWorth($id, (int) $args[0]);
         return true;
     }

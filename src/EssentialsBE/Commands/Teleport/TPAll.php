@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Teleport;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,12 +25,8 @@ class TPAll extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
-            return false;
-        }
-        if($this->getAPI()->getEssentialsBEPlugin()->getConfig()->get("teleporting") !== true) {
-            $sender->sendMessage(TextFormat::RED . "This command has been disabled!");
             return false;
         }
         if((!isset($args[0]) && !$sender instanceof Player) || count($args) > 1){
@@ -42,10 +41,10 @@ class TPAll extends BaseCommand{
         foreach($this->getAPI()->getServer()->getOnlinePlayers() as $p){
             if($p !== $player){
                 $p->teleport($player);
-                $p->sendMessage(TextFormat::YELLOW . "Teleporting to " . $player->getDisplayName() . "...");
+                $p->sendMessage(TextFormat::YELLOW . "§dTeleporting to§5 " . $player->getDisplayName() . "§d...");
             }
         }
-        $player->sendMessage(TextFormat::YELLOW . "Teleporting players to you...");
+        $player->sendMessage(TextFormat::YELLOW . "§dTeleporting players to you...");
         return true;
     }
 } 

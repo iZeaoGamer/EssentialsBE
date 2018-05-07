@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Economy;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -11,7 +14,7 @@ class BalanceTop extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "balancetop", "See the top money", null, true, ["topbalance", "topmoney", "moneytop"]);
+        parent::__construct($api, "balancetop", "See the top money", "", true, ["topbalance", "topmoney", "moneytop"]);
         $this->setPermission("essentials.balancetop.use");
     }
 
@@ -21,7 +24,7 @@ class BalanceTop extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -29,7 +32,7 @@ class BalanceTop extends BaseCommand{
             $this->sendUsage($sender, $alias);
             return false;
         }
-        $sender->sendMessage(TextFormat::GREEN . " --- Money top list ---");
+        $sender->sendMessage(TextFormat::GREEN . " §b§l--- Money top list ---§r");
         $this->getAPI()->sendBalanceTop($sender);
         return true;
     }

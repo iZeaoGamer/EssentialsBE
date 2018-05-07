@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Economy;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,7 +25,7 @@ class Worth extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -36,10 +39,10 @@ class Worth extends BaseCommand{
             $id = $this->getAPI()->getItem($args[0])->getId();
         }
         if(!($worth = $this->getAPI()->getItemWorth($id))){
-            $sender->sendMessage(TextFormat::RED . "[Error] Worth not available for this item");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Worth not available for this item");
             return false;
         }
-        $sender->sendMessage(TextFormat::AQUA . "Item's worth is " . $this->getAPI()->getCurrencySymbol() . $worth);
+        $sender->sendMessage(TextFormat::AQUA . "§aItem's worth is§b " . $this->getAPI()->getCurrencySymbol() . $worth);
         return true;
     }
 }

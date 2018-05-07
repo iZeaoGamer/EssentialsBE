@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Economy;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -12,7 +15,7 @@ class Balance extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "balance", "See how many money do you have", "[player]", true, ["bal", "money"]);
+        parent::__construct($api, "balance", "See how many money do you have", "[player]", false, ["bal", "money"]);
         $this->setPermission("essentials.balance.use");
     }
 
@@ -22,7 +25,7 @@ class Balance extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -36,11 +39,11 @@ class Balance extends BaseCommand{
                 $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                 return false;
             }elseif(!$player = $this->getAPI()->getPlayer($args[0])){
-                $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2Player not found");
                 return false;
             }
         }
-        $sender->sendMessage(TextFormat::AQUA . ($player === $sender ? "Your current balance is " : $player->getDisplayName() . TextFormat::AQUA . " has ") . TextFormat::YELLOW . $this->getAPI()->getCurrencySymbol() . $this->getAPI()->getPlayerBalance($player));
+        $sender->sendMessage(TextFormat::AQUA . ($player === $sender ? "§aYour current balance is§b " : $player->getDisplayName() . TextFormat::GREEN . " §ahas ") . TextFormat::AQUA . $this->getAPI()->getCurrencySymbol() . $this->getAPI()->getPlayerBalance($player));
         return true;
     }
 }

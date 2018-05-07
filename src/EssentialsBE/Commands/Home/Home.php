@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\Home;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,12 +25,8 @@ class Home extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
-            return false;
-        }
-        if($this->getAPI()->getEssentialsBEPlugin()->getConfig()->get("homes") !== true) {
-            $sender->sendMessage(TextFormat::RED . "This command has been disabled!");
             return false;
         }
         if(!$sender instanceof Player || count($args) > 1){
@@ -36,18 +35,18 @@ class Home extends BaseCommand{
         }
         if(count($args) === 0){
             if(($list = $this->getAPI()->homesList($sender, false)) === false){
-                $sender->sendMessage(TextFormat::AQUA . "You don't have any home yet");
+                $sender->sendMessage(TextFormat::AQUA . "§c[Error] §2You don't have any home yet.");
                 return false;
             }
-            $sender->sendMessage(TextFormat::AQUA . "Available homes:\n" . $list);
+            $sender->sendMessage(TextFormat::AQUA . "§bHere's a list of homes:\n§a" . $list);
             return true;
         }
         if(!($home = $this->getAPI()->getHome($sender, $args[0]))){
-            $sender->sendMessage(TextFormat::RED . "[Error] Home doesn't exists or the world is not available");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Home doesn't exists or the world is not available");
             return false;
         }
         $sender->teleport($home);
-        $sender->sendMessage(TextFormat::GREEN . "Teleporting to home " . TextFormat::AQUA . $home->getName() . TextFormat::GREEN . "...");
+        $sender->sendMessage(TextFormat::GREEN . "§dTeleporting to home §5" . TextFormat::DARK_PURPLE . $home->getName() . TextFormat::GREEN . "§dsuccesfully!");
         return true;
     }
 } 

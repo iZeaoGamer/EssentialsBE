@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands\PowerTool;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -13,7 +16,7 @@ class PowerTool extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "powertool", "Toogle PowerTool on the item you're holding", "<command|c:chat macro> <arguments...>", false, ["pt"]);
+        parent::__construct($api, "powertool", "Toggle PowerTool on the item you're holding", "<command|c:chat macro> <arguments...>", false, ["pt"]);
         $this->setPermission("essentials.powertool.use");
     }
 
@@ -23,12 +26,8 @@ class PowerTool extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
-            return false;
-        }
-        if($this->getAPI()->getEssentialsBEPlugin()->getConfig()->get("powertool") !== true) {
-            $sender->sendMessage(TextFormat::RED . "This command has been disabled!");
             return false;
         }
         if(!$sender instanceof Player){
@@ -37,7 +36,7 @@ class PowerTool extends BaseCommand{
         }
         $item = $sender->getInventory()->getItemInHand();
         if($item->getId() === Item::AIR){
-            $sender->sendMessage(TextFormat::RED . "You can't assign a command to an empty hand.");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2You can't assign a command to an empty hand, silly.");
             return false;
         }
 
@@ -47,24 +46,24 @@ class PowerTool extends BaseCommand{
                 return false;
             }
             if($this->getAPI()->getPowerToolItemCommand($sender, $item) !== false){
-                $sender->sendMessage(TextFormat::GREEN . "Command removed from this item.");
+                $sender->sendMessage(TextFormat::GREEN . "§dCommand removed from this item succesfully.");
             }elseif($this->getAPI()->getPowerToolItemCommands($sender, $item) !== false){
-                $sender->sendMessage(TextFormat::GREEN . "Commands removed from this item.");
+                $sender->sendMessage(TextFormat::GREEN . "§dCommands removed from this item succesfully.");
             }
             if($this->getAPI()->getPowerToolItemChatMacro($sender, $item) !== false){
-                $sender->sendMessage(TextFormat::GREEN . "Chat macro removed from this item.");
+                $sender->sendMessage(TextFormat::GREEN . "§dChat macro removed from this item succesfully.");
             }
             $this->getAPI()->disablePowerToolItem($sender, $item);
         }else{
             if($args[0] === "pt" || $args[0] === "ptt" || $args[0] === "powertool" || $args[0] === "powertooltoggle"){
-                $sender->sendMessage(TextFormat::RED . "This command can't be assigned");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2This command can't be assigned");
                 return false;
             }
             $command = implode(" ", $args);
             if(stripos($command, "c:") !== false){ //Create a chat macro
                 $c = substr($command, 2);
                 $this->getAPI()->setPowerToolItemChatMacro($sender, $item, $c);
-                $sender->sendMessage(TextFormat::GREEN . "Chat macro successfully assigned to this item!");
+                $sender->sendMessage(TextFormat::GREEN . "§dChat macro successfully assigned to this item!");
             }elseif(stripos($command, "a:") !== false){
                 if(!$sender->hasPermission("essentials.powertool.append")){
                     $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
@@ -73,7 +72,7 @@ class PowerTool extends BaseCommand{
                 $commands = substr($command, 2);
                 $commands = explode(";", $commands);
                 $this->getAPI()->setPowerToolItemCommands($sender, $item, $commands);
-                $sender->sendMessage(TextFormat::GREEN . "Commands successfully assigned to this item!");
+                $sender->sendMessage(TextFormat::GREEN . "§dCommands successfully assigned to this item!");
             }elseif(stripos($command, "r:") !== false){
                 if(!$sender->hasPermission("essentials.powertool.append")){
                     $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
@@ -81,7 +80,7 @@ class PowerTool extends BaseCommand{
                 }
                 $command = substr($command, 2);
                 $this->getAPI()->removePowerToolItemCommand($sender, $item, $command);
-                $sender->sendMessage(TextFormat::YELLOW . "Command successfully removed from this item!");
+                $sender->sendMessage(TextFormat::YELLOW . "§dCommand successfully removed from this item!");
             }elseif(count($args) === 1 && (($a = strtolower($args[0])) === "l" || $a === "d")){
                 switch($a){
                     case "l":
@@ -120,13 +119,13 @@ class PowerTool extends BaseCommand{
                             return false;
                         }
                         $this->getAPI()->disablePowerToolItem($sender, $item);
-                        $sender->sendMessage(TextFormat::GREEN . "Command removed from this item.");
+                        $sender->sendMessage(TextFormat::GREEN . "§dCommand removed from this item succesfully.");
                         return true;
                         break;
                 }
             }else{
                 $this->getAPI()->setPowerToolItemCommand($sender, $item, $command);
-                $sender->sendMessage(TextFormat::GREEN . "Command successfully assigned to this item!");
+                $sender->sendMessage(TextFormat::GREEN . "§dCommand successfully assigned to this item!");
             }
         }
         return true;
