@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -13,7 +16,7 @@ class Top extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "top", "Teleport to the highest block above you", null, false);
+        parent::__construct($api, "top", "Teleport to the highest block above you", "", false);
         $this->setPermission("essentials.top");
     }
 
@@ -23,7 +26,7 @@ class Top extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -31,8 +34,8 @@ class Top extends BaseCommand{
             $this->sendUsage($sender, $alias);
             return false;
         }
-        $sender->sendMessage(TextFormat::YELLOW . "Teleporting...");
-        $sender->teleport(new Vector3($sender->getX(), $sender->getLevel()->getHighestBlockAt($sender->getX(), $sender->getZ()) + 1, $sender->getZ())); 
+        $sender->sendMessage(TextFormat::YELLOW . "§dTeleporting to the top.");
+        $sender->teleport(new Vector3($sender->getX(), $sender->getLevel()->getHighestBlockAt($sender->getFloorX(), $sender->getFloorZ()) + 1, $sender->getZ())); 
         return true;
     }
 }

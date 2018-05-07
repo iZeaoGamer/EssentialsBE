@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -25,7 +28,7 @@ class TreeCommand extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -35,7 +38,7 @@ class TreeCommand extends BaseCommand{
         }
         $block = $sender->getTargetBlock(100, BaseAPI::NON_SOLID_BLOCKS);
         if($block === null){
-            $sender->sendMessage(TextFormat::RED . "There isn't a reachable block");
+            $sender->sendMessage(TextFormat::RED . "[Error] ยง2There isn't a reachable block");
             return false;
         }
         switch(strtolower($args[0])){
@@ -52,15 +55,13 @@ class TreeCommand extends BaseCommand{
             case "jungle":
                 $type = Sapling::JUNGLE;
                 break;
-            /*case "redmushroom":
+            case "redmushroom":
                 $type = Sapling::RED_MUSHROOM;
                 break;
             case "brownmushroom":
                 $type = Sapling::BROWN_MUSHROOM;
                 break;
-            case "swamp":
-                $type = Sapling::SWAMP;
-                break;*/
+
         }
         Tree::growTree($sender->getLevel(), $block->x, $block->y+1, $block->z, new Random(mt_rand()), $type & 0x07);
         return true;

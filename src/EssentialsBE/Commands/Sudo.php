@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,7 +25,7 @@ class Sudo extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -31,22 +34,22 @@ class Sudo extends BaseCommand{
             return false;
         }
         if(!($player = $this->getAPI()->getPlayer(array_shift($args)))){
-            $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Player not found");
             return false;
         }elseif($player->hasPermission("essentials.sudo.exempt")){
-            $sender->sendMessage(TextFormat::RED . "[Error] " . $player->getName() . " cannot be sudo'ed");
+            $sender->sendMessage(TextFormat::RED . "[Error] " . $player->getName() . " §2cannot be sudo'ed because they either have the permission: essentials.sudo.exempt or because they're OP.");
             return false;
         }
 
         $v = implode(" ", $args);
         if(substr($v, 0, 2) === "c:"){
-            $sender->sendMessage(TextFormat::GREEN . "Sending message as " .  $player->getDisplayName());
+            $sender->sendMessage(TextFormat::GREEN . "§dSending message as §5" .  $player->getDisplayName());
             $this->getAPI()->getServer()->getPluginManager()->callEvent($ev = new PlayerChatEvent($player, substr($v, 2)));
             if(!$ev->isCancelled()){
-                $this->getAPI()->getServer()->broadcastMessage(\sprintf($ev->getFormat(), $ev->getPlayer()->getDisplayName(), $ev->getMessage()), $ev->getRecipients());
+                $this->getAPI()->getServer()->broadcastMessage($this->getAPI()->getServer()->getLanguage()->translateString($ev->getFormat(), [$ev->getPlayer()->getDisplayName(), $ev->getMessage()]), $ev->getRecipients());
             }
         }else{
-            $sender->sendMessage(TextFormat::AQUA . "Command ran as " .  $player->getDisplayName());
+            $sender->sendMessage(TextFormat::AQUA . "§dCommand ran as §5" .  $player->getDisplayName());
             $this->getAPI()->getServer()->dispatchCommand($player, $v);
         }
         return true;

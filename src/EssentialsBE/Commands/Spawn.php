@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -23,7 +26,7 @@ class Spawn extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -34,15 +37,15 @@ class Spawn extends BaseCommand{
         $player = $sender;
         if(isset($args[0])){
             if(!$sender->hasPermission("essentials.spawn.other")){
-                $sender->sendMessage(TextFormat::RED . "[Error] You can't teleport other players to spawn");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2You can't teleport other players to spawn");
                 return false;
             }elseif(!($player = $this->getAPI()->getPlayer($args[0]))){
-                $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2Player not found");
                 return false;
             }
         }
         $player->teleport(Location::fromObject($this->getAPI()->getServer()->getDefaultLevel()->getSpawnLocation(), $this->getAPI()->getServer()->getDefaultLevel()));
-        $player->sendMessage(TextFormat::GREEN . "Teleporting...");
+        $player->sendMessage(TextFormat::GREEN . "§dTeleported to Main Spawn succesfully!");
         return true;
     }
 } 

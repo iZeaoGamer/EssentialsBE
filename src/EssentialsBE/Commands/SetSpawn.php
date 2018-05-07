@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -12,7 +15,7 @@ class SetSpawn extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "setspawn", "Change your server main spawn point", null, false);
+        parent::__construct($api, "setspawn", "Change your server main spawn point", "", false);
         $this->setPermission("essentials.setspawn");
     }
 
@@ -22,18 +25,18 @@ class SetSpawn extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
-        if(!$sender instanceof Player || count($args) != 0){
+        if(!$sender instanceof Player || count($args) !== 0){
             $this->sendUsage($sender, $alias);
             return false;
         }
         $sender->getLevel()->setSpawnLocation($sender);
         $sender->getServer()->setDefaultLevel($sender->getLevel());
-        $sender->sendMessage(TextFormat::YELLOW . "Server's spawn point changed!");
-        $this->getAPI()->getServer()->getLogger()->info(TextFormat::YELLOW . "Server's spawn point set to " . TextFormat::AQUA . $sender->getLevel()->getName() . TextFormat::YELLOW . " by " . TextFormat::GREEN . $sender->getName());
+        $sender->sendMessage(TextFormat::YELLOW . "§dSet the main spawn succesfully.");
+        $this->getAPI()->getServer()->getLogger()->info(TextFormat::YELLOW . "§dServer's spawn point set to " . TextFormat::DARK_PURPLE . $sender->getLevel()->getName() . TextFormat::DARK_AQUA . " §dby " . TextFormat::DARK_PURPLE . $sender->getName());
         return true;
     }
 }
