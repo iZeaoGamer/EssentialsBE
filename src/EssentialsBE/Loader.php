@@ -1,12 +1,15 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE;
 
 use EssentialsBE\BaseFiles\BaseAPI;
 use EssentialsBE\BaseFiles\BaseCommand;
 use EssentialsBE\Commands\AFK;
 use EssentialsBE\Commands\Antioch;
-use EssentialsBE\Commands\Back;
 use EssentialsBE\Commands\BreakCommand;
+use EssentialsBE\Commands\BigTreeCommand;
 use EssentialsBE\Commands\Broadcast;
 use EssentialsBE\Commands\Burn;
 use EssentialsBE\Commands\ClearInventory;
@@ -26,6 +29,7 @@ use EssentialsBE\Commands\Extinguish;
 use EssentialsBE\Commands\Fly;
 use EssentialsBE\Commands\GetPos;
 use EssentialsBE\Commands\God;
+use EssentialsBE\Commands\Hat;
 use EssentialsBE\Commands\Heal;
 use EssentialsBE\Commands\Home\DelHome;
 use EssentialsBE\Commands\Home\Home;
@@ -34,7 +38,7 @@ use EssentialsBE\Commands\ItemCommand;
 use EssentialsBE\Commands\ItemDB;
 use EssentialsBE\Commands\Jump;
 use EssentialsBE\Commands\KickAll;
-use EssentialsBE\Commands\Kit;
+//use EssentialsBE\Commands\Kit;
 use EssentialsBE\Commands\Lightning;
 use EssentialsBE\Commands\More;
 use EssentialsBE\Commands\Mute;
@@ -55,6 +59,7 @@ use EssentialsBE\Commands\Reply;
 use EssentialsBE\Commands\Seen;
 use EssentialsBE\Commands\SetSpawn;
 use EssentialsBE\Commands\Spawn;
+use EssentialsBE\Commands\Speed;
 use EssentialsBE\Commands\Sudo;
 use EssentialsBE\Commands\Suicide;
 use EssentialsBE\Commands\Teleport\TPA;
@@ -65,11 +70,13 @@ use EssentialsBE\Commands\Teleport\TPDeny;
 use EssentialsBE\Commands\Teleport\TPHere;
 use EssentialsBE\Commands\TempBan;
 use EssentialsBE\Commands\Top;
+use EssentialsBE\Commands\TreeCommand;
 use EssentialsBE\Commands\Unlimited;
 use EssentialsBE\Commands\Vanish;
 use EssentialsBE\Commands\Warp\DelWarp;
 use EssentialsBE\Commands\Warp\Setwarp;
 use EssentialsBE\Commands\Warp\Warp;
+use EssentialsBE\Commands\Whois;
 use EssentialsBE\Commands\World;
 use EssentialsBE\EventHandlers\OtherEvents;
 use EssentialsBE\EventHandlers\PlayerEvents;
@@ -82,7 +89,7 @@ class Loader extends PluginBase{
     /** @var BaseAPI */
     private $api;
 
-    public function onEnable(){
+    public function onEnable(): void{
         if($this->getConfig()->get("enable") === false) {
            $this->setEnabled(false);
         }
@@ -99,7 +106,7 @@ class Loader extends PluginBase{
             mkdir($this->getDataFolder());
         }
         
-	$this->getLogger()->info(TextFormat::YELLOW . "Loading...");
+		$this->getLogger()->info(TextFormat::YELLOW . "ยง6Loading...");
         $this->registerEvents();
         $this->registerCommands();
         if(count($p = $this->getServer()->getOnlinePlayers()) > 0){
@@ -111,17 +118,17 @@ class Loader extends PluginBase{
         $this->getAPI()->scheduleAutoAFKSetter();
     }
 
-    public function onDisable(){
+    public function onDisable(): void{
         if(count($l = $this->getServer()->getOnlinePlayers()) > 0){
             $this->getAPI()->removeSession($l);
         }
-        $this->getAPI()->__destruct();
+        $this->getAPI()->close();
     }
 
     /**
      * Function to register all the Event Handlers that EssentialsBE provide
      */
-    public function registerEvents(){
+    public function registerEvents(): void{
         $this->getServer()->getPluginManager()->registerEvents(new OtherEvents($this->getAPI()), $this);
         $this->getServer()->getPluginManager()->registerEvents(new PlayerEvents($this->getAPI()), $this);
         $this->getServer()->getPluginManager()->registerEvents(new SignEvents($this->getAPI()), $this);
@@ -131,12 +138,11 @@ class Loader extends PluginBase{
      * Function to register all EssentialsBE's commands...
      * And to override some default ones
      */
-    private function registerCommands(){
+    private function registerCommands(): void{
         $commands = [
             new AFK($this->getAPI()),
             new Antioch($this->getAPI()),
-            new Back($this->getAPI()),
-            //new BigTreeCommand($this->getAPI()), TODO
+            new BigTreeCommand($this->getAPI()),
             new BreakCommand($this->getAPI()),
             new Broadcast($this->getAPI()),
             new Burn($this->getAPI()),
@@ -149,13 +155,13 @@ class Loader extends PluginBase{
             new Fly($this->getAPI()),
             new GetPos($this->getAPI()),
             new God($this->getAPI()),
-            //new Hat($this->getAPI()), TODO: Implement when MCPE implements "Block-Hat rendering"
+            new Hat($this->getAPI()),
             new Heal($this->getAPI()),
             new ItemCommand($this->getAPI()),
             new ItemDB($this->getAPI()),
             new Jump($this->getAPI()),
             new KickAll($this->getAPI()),
-            new Kit($this->getAPI()),
+            //new Kit($this->getAPI()),
             new Lightning($this->getAPI()),
             new More($this->getAPI()),
             new Mute($this->getAPI()),
@@ -171,15 +177,15 @@ class Loader extends PluginBase{
             new Seen($this->getAPI()),
             new SetSpawn($this->getAPI()),
             new Spawn($this->getAPI()),
-            //new Speed($this->getAPI()), TODO
+            new Speed($this->getAPI()),
             new Sudo($this->getAPI()),
             new Suicide($this->getAPI()),
             new TempBan($this->getAPI()),
             new Top($this->getAPI()),
-            //new TreeCommand($this->getAPI()), TODO
+            new TreeCommand($this->getAPI()),
             new Unlimited($this->getAPI()),
             new Vanish($this->getAPI()),
-            //new Whois($this->getAPI()), TODO
+            new Whois($this->getAPI()),
             new World($this->getAPI()),
 		
             // Messages
@@ -189,76 +195,77 @@ class Loader extends PluginBase{
             // Override
             new Gamemode($this->getAPI()),
             new Kill($this->getAPI())		
-	];
+		];
 	    
-	$economycommands = [
-            new Balance($this->getAPI()),
-            new Eco($this->getAPI()),
-            new Pay($this->getAPI()),
-            new Sell($this->getAPI()),
-            new SetWorth($this->getAPI()),
-            new Worth($this->getAPI()),
-            new BalanceTop($this->getAPI())
-        ];
-	    
-	$homecommands = [
-            new DelHome($this->getAPI()),
-            new Home($this->getAPI()),
-            new SetHome($this->getAPI())
-	];
-	    
-	$powertoolcommands = [
-            new PowerTool($this->getAPI())
-	];
-		
-	$teleportcommands = [
-            new TPA($this->getAPI()),
-            new TPAccept($this->getAPI()),
-            new TPAHere($this->getAPI()),
-            new TPAll($this->getAPI()),
-            new TPDeny($this->getAPI()),
-            new TPHere($this->getAPI())
-	];
-	    
-	$warpcommands = [
-            new DelWarp($this->getAPI()),
-            new Setwarp($this->getAPI()),
-            new Warp($this->getAPI())
-        ];
-	    
-	    
-	if($this->getServer()->getPluginManager()->getPlugin("SimpleWarp") === null) {
-            foreach($warpcommands as $warpcommand) {
-	        if($this->getConfig()->get("warps") === true) {
-		    $commands[] = $warpcommand;
-	        }
+		$economyCommands = [
+	        new Balance($this->getAPI()),
+	        new Eco($this->getAPI()),
+	        new Pay($this->getAPI()),
+	        new Sell($this->getAPI()),
+	        new SetWorth($this->getAPI()),
+	        new Worth($this->getAPI()),
+	        new BalanceTop($this->getAPI())
+		];
+
+		$homeCommands = [
+	        new DelHome($this->getAPI()),
+	        new Home($this->getAPI()),
+	        new SetHome($this->getAPI())
+		];
+
+		$powertoolCommands = [
+	        new PowerTool($this->getAPI()),
+			new PowerToolToggle($this->getAPI())
+		];
+
+		$teleportCommands = [
+	        new TPA($this->getAPI()),
+	        new TPAccept($this->getAPI()),
+	        new TPAHere($this->getAPI()),
+	        new TPAll($this->getAPI()),
+	        new TPDeny($this->getAPI()),
+	        new TPHere($this->getAPI())
+		];
+
+		$warpCommands = [
+	        new DelWarp($this->getAPI()),
+	        new Setwarp($this->getAPI()),
+	        new Warp($this->getAPI())
+		];
+
+
+		if($this->getServer()->getPluginManager()->getPlugin("SimpleWarp") === null) {
+	            foreach($warpCommands as $warpCommand) {
+		        if($this->getConfig()->get("warps") === true) {
+			    $commands[] = $warpCommand;
+		        }
+		    }
+	    } else {
+	        $this->getLogger()->info(TextFormat::YELLOW . "ยง6SimpleWarp installed, disabling EssentialsBE warps...");
 	    }
-        } else {
-            $this->getLogger()->info(TextFormat::YELLOW . "SimpleWarp installed, disabling EssentialsBE warps...");
-        }
-	  
-	foreach($teleportcommands as $teleportcommand) {
-	    if($this->getConfig()->get("teleporting") === true) {
-		 $commands[] = $teleportcommand;
-	    }
-	}
-        
-	foreach($powertoolcommands as $powertoolcommand) {
-	    if($this->getConfig()->get("powertool") === true) {
-		 $commands[] = $powertoolcommand;
-	    }
-	}
-	    
-	foreach($homecommands as $homecommand) {
-	    if($this->getConfig()->get("homes") === true) {
-		 $commands[] = $homecommand;
-	    }
-	}	    
-	foreach($economycommands as $economycommand) {
-	    if($this->getConfig()->get("economy") === true) {
-		 $commands[] = $economycommand;
-	    }
-	}
+
+		foreach($teleportCommands as $teleportCommand) {
+		    if($this->getConfig()->get("teleporting") === true) {
+			 $commands[] = $teleportCommand;
+		    }
+		}
+
+		foreach($powertoolCommands as $powertoolCommand) {
+		    if($this->getConfig()->get("powertool") === true) {
+			 $commands[] = $powertoolCommand;
+		    }
+		}
+
+		foreach($homeCommands as $homeCommand) {
+		    if($this->getConfig()->get("homes") === true) {
+			 $commands[] = $homeCommand;
+		    }
+		}
+		foreach($economyCommands as $economyCommand) {
+		    if($this->getConfig()->get("economy") === true) {
+			 $commands[] = $economyCommand;
+		    }
+		}
 	    
         $aliased = [];
         foreach($commands as $cmd){
@@ -271,8 +278,8 @@ class Loader extends PluginBase{
         }
         $cfg = $this->getConfig()->get("commands", []);
         foreach($cfg as $del){
-            if(isset($alias[$del])){
-                unset($commands[$alias[$del]]);
+            if(isset($aliased[$del])){
+                unset($commands[$aliased[$del]]);
             }else{
                 $this->getLogger()->debug("\"$del\" command not found inside EssentialsBE, skipping...");
             }
@@ -280,7 +287,7 @@ class Loader extends PluginBase{
         $this->getServer()->getCommandMap()->registerAll("EssentialsBE", $commands);
     }
 
-    public function checkConfig(){
+    public function checkConfig(): void{
         if(!is_dir($this->getDataFolder())){
             mkdir($this->getDataFolder());
         }
@@ -288,7 +295,7 @@ class Loader extends PluginBase{
             $this->saveDefaultConfig();
         }
         $this->saveResource("Economy.yml");
-        $this->saveResource("Kits.yml");
+        //$this->saveResource("Kits.yml");
         $this->saveResource("Warps.yml");
         $cfg = $this->getConfig();
 

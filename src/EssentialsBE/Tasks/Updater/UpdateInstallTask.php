@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Tasks\Updater;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -29,7 +32,7 @@ class UpdateInstallTask extends AsyncTask{
         $this->api = $api;
     }
 
-    public function onRun(){
+    public function onRun(): void{
         if(file_exists($this->pluginPath . "EssentialsBE.phar")){
             unlink($this->pluginPath . "EssentialsBE.phar");
         }
@@ -54,7 +57,7 @@ class UpdateInstallTask extends AsyncTask{
     /**
      * @param Server $server
      */
-    public function onCompletion(Server $server){
+    public function onCompletion(Server $server): void{
         $server->getLogger()->info(TextFormat::AQUA . "[EssentialsBE]" . TextFormat::YELLOW . " Successfully updated to version " . TextFormat::GREEN . $this->newVersion . TextFormat::YELLOW . ". To start using the new features, please fully restart your server.");
         $this->api->scheduleUpdaterTask();
     }

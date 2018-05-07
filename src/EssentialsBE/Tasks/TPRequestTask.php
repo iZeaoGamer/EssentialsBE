@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Tasks;
 
 use EssentialsBE\BaseFiles\BaseTask;
@@ -22,9 +25,9 @@ class TPRequestTask extends BaseTask{
     /**
      * @param int $currentTick
      */
-    public function onRun($currentTick){
+    public function onRun(int $currentTick): void{
         if($this->requester instanceof Player && $this->requester->isOnline()) {
-            $this->getAPI()->getServer()->getLogger()->debug(TextFormat::YELLOW . "Running EssentialsBE's TPRequestTask");
+            $this->getAPI()->getServer()->getLogger()->debug(TextFormat::YELLOW . "ยง6Running EssentialsBE's TPRequestTask");
             $this->getAPI()->removeTPRequest($this->requester);
         }
     }

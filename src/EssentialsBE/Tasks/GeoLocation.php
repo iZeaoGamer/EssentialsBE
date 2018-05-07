@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Tasks;
 
 use EssentialsBE\Loader;
@@ -18,9 +21,9 @@ class GeoLocation extends AsyncTask{
      */
     public function __construct($player){
         if($player !== null){
-            if(!is_array($player)){
-                $player = [$player];
-            }
+        	if(!is_array($player)) {
+        		$player = [$player];
+	        }
             foreach($player as $p){
                 $spl = spl_object_hash($p);
                 $this->player[$spl] = $p;
@@ -29,7 +32,7 @@ class GeoLocation extends AsyncTask{
         }
     }
 
-    public function onRun(){
+    public function onRun(): void{
         if($this->player === null){
             $data = Utils::getURL("http://ip-api.com/json/");
             $this->setResult(json_decode($data, true)["country"] ?? "Unknown");
@@ -52,7 +55,7 @@ class GeoLocation extends AsyncTask{
     /**
      * @param Server $server
      */
-    public function onCompletion(Server $server){
+    public function onCompletion(Server $server): void{
         /** @var Loader $plugin */
         $plugin = $server->getPluginManager()->getPlugin("EssentialsBE");
         if(!is_array($this->getResult())){
