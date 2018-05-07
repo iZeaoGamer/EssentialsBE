@@ -1,32 +1,40 @@
 <?php
+
+declare(strict_types=1);
+
 namespace EssentialsBE\BaseFiles;
 
-use EssentialsBE\Loader;
 use pocketmine\event\plugin\PluginEvent;
+use pocketmine\plugin\Plugin;
 
-abstract class BaseCustomEvent extends PluginEvent{
-    /** @var BaseAPI */
-    private $api;
+abstract class BaseCustomEvent extends PluginEvent
+{
+	/** @var BaseAPI */
+	private $api;
 
-    /**
-     * @param BaseAPI $api
-     */
-    public function __construct(BaseAPI $api){
-        parent::__construct($api->getEssentialsBEPlugin());
-        $this->api = $api;
-    }
+	/**
+	 * @param BaseAPI $api
+	 */
+	public function __construct(BaseAPI $api)
+	{
+		parent::__construct($api->getEssentialsBEPlugin());
+		$this->api = $api;
+	}
 
-    /**
-     * @return Loader
-     */
-    public final function getPlugin(): Loader{
-        return $this->getAPI()->getEssentialsBEPlugin();
-    }
 
-    /**
-     * @return BaseAPI
-     */
-    public final function getAPI(): BaseAPI{
-        return $this->api;
-    }
+	/**
+	 * @return Plugin
+	 */
+	public final function getPlugin() : Plugin
+	{
+		return $this->getAPI()->getEssentialsBEPlugin();
+	}
+
+	/**
+	 * @return BaseAPI
+	 */
+	public final function getAPI() : BaseAPI
+	{
+		return $this->api;
+	}
 }

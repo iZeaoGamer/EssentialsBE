@@ -1,11 +1,13 @@
 <?php
+
 namespace EssentialsBE\BaseFiles;
 
-use EssentialsBE\Loader;
+//use EssentialsBE\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
 
 abstract class BaseCommand extends Command implements PluginIdentifiableCommand{
@@ -18,20 +20,17 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand{
      * @param BaseAPI $api
      * @param string $name
      * @param string $description
-     * @param null|string $usageMessage
+     * @param string $usageMessage
      * @param bool|null|string $consoleUsageMessage
      * @param array $aliases
      */
-    public function __construct(BaseAPI $api, $name, $description = "", $usageMessage = null, $consoleUsageMessage = true, array $aliases = []){
+    public function __construct(BaseAPI $api, string $name, string $description = "", string $usageMessage = "", $consoleUsageMessage = true, array $aliases = []){
         parent::__construct($name, $description, $usageMessage, $aliases);
         $this->api = $api;
         $this->consoleUsageMessage = $consoleUsageMessage;
     }
 
-    /**
-     * @return Loader
-     */
-    public final function getPlugin(): Loader{
+    public final function getPlugin(): Plugin{
         return $this->getAPI()->getEssentialsBEPlugin();
     }
 
@@ -63,13 +62,13 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand{
      * @param CommandSender $sender
      * @param string $alias
      */
-    public function sendUsage(CommandSender $sender, string $alias){
-        $message = TextFormat::RED . "Usage: " . TextFormat::GRAY . "/$alias ";
+    public function sendUsage(CommandSender $sender, string $alias): void{
+        $message = TextFormat::RED . "§bPlease use: " . TextFormat::GRAY . "§a/$alias ";
         if(!$sender instanceof Player){
             if(is_string($this->consoleUsageMessage)){
                 $message .= $this->consoleUsageMessage;
             }elseif(!$this->consoleUsageMessage){
-                $message = TextFormat::RED . "[Error] Please run this command in-game";
+                $message = TextFormat::RED . "[Error] §2Please run this command in-game";
             }else{
                 $message .= str_replace("[player]", "<player>", parent::getUsage());
             }
