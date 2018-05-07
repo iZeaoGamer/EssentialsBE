@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Tasks\AFK;
 
 use EssentialsBE\BaseFiles\BaseTask;
@@ -27,8 +30,8 @@ class AFKSetterTask extends BaseTask{
     /**
      * @param int $currentTick
      */
-    public function onRun($currentTick){
-        $this->getAPI()->getServer()->getLogger()->debug(TextFormat::YELLOW . "Running EssentialsBE's AFKSetterTask");
+    public function onRun(int $currentTick): void{
+        $this->getAPI()->getServer()->getLogger()->debug(TextFormat::YELLOW . "ยง6Running EssentialsBE's AFKSetterTask");
         foreach($this->getAPI()->getServer()->getOnlinePlayers() as $p){
             if(!$this->getAPI()->isAFK($p) && ($last = $this->getAPI()->getLastPlayerMovement($p)) !== null && !$p->hasPermission("essentials.afk.preventauto")){
                 if(time() - $last >= $this->getAPI()->getEssentialsBEPlugin()->getConfig()->getNested("afk.auto-set")){
