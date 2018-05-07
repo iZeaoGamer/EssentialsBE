@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,7 +25,7 @@ class Condense extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -44,15 +47,16 @@ class Condense extends BaseCommand{
             default: // Item name|id
                 $target = $this->getAPI()->getItem($args[0]);
                 if($target->getId() === 0){
-                    $sender->sendMessage(TextFormat::RED . "Unknown item \"" . $args[0] . "\"");
+                    $sender->sendMessage(TextFormat::RED . "[Error] ยง2Unknown item \"" . $args[0] . "\"");
                     return false;
                 }
                 break;
         }
         if(!$this->getAPI()->condenseItems($sender->getInventory(), $target)){
-            $sender->sendMessage(TextFormat::RED . "[Error] This item can't be condensed");
+            $sender->sendMessage(TextFormat::RED . "[Error] ยง2This item can't be condensed");
+            return false;
         }
-        $sender->sendMessage(TextFormat::YELLOW . "Condensing items...");
+        $sender->sendMessage(TextFormat::YELLOW . "ยง5Condensing items...");
         return true;
     }
 }

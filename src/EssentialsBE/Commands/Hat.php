@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -17,7 +20,14 @@ class Hat extends BaseCommand{
         $this->setPermission("essentials.hat");
     }
 
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+	/**
+	 * @param CommandSender $sender
+	 * @param string        $alias
+	 * @param array         $args
+	 *
+	 * @return bool
+	 */
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -40,16 +50,16 @@ class Hat extends BaseCommand{
         if(!$remove){
             $new = $sender->getInventory()->getItemInHand();
             if($new->getId() === Item::AIR){
-                $sender->sendMessage(TextFormat::RED . "[Error] Please specify an item to wear");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2Please specify an item to wear");
                 return false;
             }
-            $slot = $sender->getInventory()->getHeldItemSlot();
+            $slot = $sender->getInventory()->getHeldItemIndex();
         }
         $sender->getInventory()->setHelmet($new);
         if($slot !== null){
             $sender->getInventory()->setItem($slot, $old);
         }
-        $sender->sendMessage(TextFormat::AQUA . ($new->getId() === Item::AIR ? "Hat removed!" : "You got a new hat!"));
+        $sender->sendMessage(TextFormat::AQUA . ($new->getId() === Item::AIR ? "§dHat removed!" : "§dYou got a new hat!"));
         return true;
     }
 }

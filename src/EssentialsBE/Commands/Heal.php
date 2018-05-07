@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -24,7 +27,7 @@ class Heal extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -37,11 +40,15 @@ class Heal extends BaseCommand{
             $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
             return false;
         }
-        $player->heal($player->getMaxHealth(), new EntityRegainHealthEvent($player, $player->getMaxHealth() - $player->getHealth(), EntityRegainHealthEvent::CAUSE_CUSTOM));
+        if($player->getName() !== $sender->getName() && !$sender->hasPermission("essentials.heal.other")) {
+        	$sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+        	return false;
+        }
+        $player->heal(new EntityRegainHealthEvent($player, $player->getMaxHealth() - $player->getHealth(), EntityRegainHealthEvent::CAUSE_CUSTOM));
         $player->getLevel()->addParticle(new HeartParticle($player->add(0, 2), 4));
-        $player->sendMessage(TextFormat::GREEN . "You have been healed!");
+        $player->sendMessage(TextFormat::GREEN . "§dYou have been healed!");
         if($player !== $sender){
-            $sender->sendMessage(TextFormat::GREEN . $player->getDisplayName() . " has been healed!");
+            $sender->sendMessage(TextFormat::DARK_PURPLE . $player->getDisplayName() . " §dhas been healed!");
         }
         return true;
     }

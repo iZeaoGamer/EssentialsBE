@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -11,7 +14,7 @@ class Broadcast extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "broadcast", "Broadcast a message.", "<message>", true, ["bcast"]);
+        parent::__construct($api, "broadcast", "Broadcast a message", "<message>", true, ["bcast"]);
         $this->setPermission("essentials.broadcast");
     }
 
@@ -21,7 +24,7 @@ class Broadcast extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -29,7 +32,7 @@ class Broadcast extends BaseCommand{
             $this->sendUsage($sender, $alias);
             return false;
         }
-        $sender->getServer()->broadcastMessage(TextFormat::LIGHT_PURPLE . "[Broadcast] " . TextFormat::RESET . implode(" ", $args));
+        $sender->getServer()->broadcastMessage(TextFormat::LIGHT_PURPLE . "§7[§aBroadcast§7] §b" . TextFormat::AQUA . implode(" ", $args));
         return true;
     }
 }

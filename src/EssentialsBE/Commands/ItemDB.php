@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,7 +25,7 @@ class ItemDB extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -31,22 +34,23 @@ class ItemDB extends BaseCommand{
             return false;
         }
         $item = $sender->getInventory()->getItemInHand();
-        $m = TextFormat::AQUA . "This item " . ($this->getAPI()->isRepairable($item) ? "has " . TextFormat::RED . $item->getDamage() . TextFormat::AQUA . " points of damage" : "metadata is " . TextFormat::RED . $item->getDamage());
-        if(isset($args[0])){
-            switch(strtolower($args[0])){
-                case "name":
-                    $m = TextFormat::AQUA . "This item is named: " . TextFormat::RED . $item->getName();
-                    break;
-                case "id":
-                    $m = TextFormat::AQUA . "This item ID is: " . TextFormat::RED . $item->getId();
-                    break;
-                case "durability":
-                case "dura":
-                case "metadata":
-                case "meta":
-                    $m = TextFormat::AQUA . "This item " . ($this->getAPI()->isRepairable($item) ? "has " . TextFormat::RED . $item->getDamage() . TextFormat::AQUA . " points of damage" : "metadata is " . TextFormat::RED . $item->getDamage());
-                    break;
-            }
+        if(!isset($args[0])){
+        	$args[0] = "id";
+        }
+        switch(strtolower($args[0])){
+            case "name":
+                $m = TextFormat::AQUA . "§aThis item is named: " . TextFormat::AQUA . $item->getName();
+                break;
+            default:
+            case "id":
+                $m = TextFormat::AQUA . "§aThis item ID is: " . TextFormat::AQUA . $item->getId();
+                break;
+            case "durability":
+            case "dura":
+            case "metadata":
+            case "meta":
+                $m = TextFormat::AQUA . "§aThis item " . ($this->getAPI()->isRepairable($item) ? "§bhas " . TextFormat::GREEN . $item->getDamage() . TextFormat::AQUA . " §5points of damage" : "§3metadata is " . TextFormat::GREEN . $item->getDamage());
+                break;
         }
         $sender->sendMessage($m);
         return true;

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -12,7 +15,7 @@ class Depth extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "depth", "Display your depth related to sea-level", null, false, ["height"]);
+        parent::__construct($api, "depth", "Display your depth related to sea-level", "", false, ["height"]);
         $this->setPermission("essentials.depth");
     }
 
@@ -22,7 +25,7 @@ class Depth extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -30,7 +33,7 @@ class Depth extends BaseCommand{
             $this->sendUsage($sender, $alias);
             return false;
         }
-        $sender->sendMessage(TextFormat::AQUA . "You're " . (($pos = $sender->getFloorY() - 63) === 0 ? "at" : (abs($pos) . " meters " . ($pos > 0 ? "above" : "below"))) . " the sea level.");
+        $sender->sendMessage(TextFormat::AQUA . "§aYou're§b " . (($pos = $sender->getFloorY() - 63) === 0 ? "at" : (abs($pos) . " §ameters " . ($pos > 0 ? "§babove" : "§3elow"))) . " §athe sea level.");
         return true;
     }
 }

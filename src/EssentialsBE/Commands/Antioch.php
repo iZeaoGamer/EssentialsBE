@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -12,7 +15,7 @@ class Antioch extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "antioch", "Holy hand grenade", null, false, ["grenade", "tnt"]);
+        parent::__construct($api, "antioch", "Holy hand grenade", "", false, ["grenade", "tnt"]);
         $this->setPermission("essentials.antioch");
     }
 
@@ -22,7 +25,7 @@ class Antioch extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -31,10 +34,10 @@ class Antioch extends BaseCommand{
             return false;
         }
         if(!$this->getAPI()->antioch($sender)){
-            $sender->sendMessage(TextFormat::RED . "[Error] Cannot throw the grenade, there isn't a near valid block");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Couldn't throw the grenade, there wasn't a valid block near");
             return false;
         }
-        $sender->sendMessage(TextFormat::GREEN . "Grenade threw!");
+        $sender->sendMessage(TextFormat::GREEN . "§dGrenade thrown!");
         return true;
     }
 }

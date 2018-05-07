@@ -1,14 +1,14 @@
 <?php
+declare(strict_types = 1);
 namespace EssentialsBE\Commands;
-
 use EssentialsBE\BaseFiles\BaseAPI;
 use EssentialsBE\BaseFiles\BaseCommand;
 use pocketmine\block\Sapling;
 use pocketmine\command\CommandSender;
 use pocketmine\level\generator\object\BigTree;
 use pocketmine\Player;
+use pocketmine\utils\Random;
 use pocketmine\utils\TextFormat;
-
 class BigTreeCommand extends BaseCommand{
     /**
      * @param BaseAPI $api
@@ -17,14 +17,13 @@ class BigTreeCommand extends BaseCommand{
         parent::__construct($api, "bigtree", "Spawns a big tree", "<tree|redwood|jungle>", false);
         $this->setPermission("essentials.bigtree");
     }
-
     /**
      * @param CommandSender $sender
      * @param string $alias
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -46,7 +45,7 @@ class BigTreeCommand extends BaseCommand{
             $block = $sender->getTargetBlock(100, $transparent);
         }*/
         if($block === null){
-            $sender->sendMessage(TextFormat::RED . "There isn't a reachable block");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2There isn't a reachable block");
             return false;
         }
         switch(strtolower($args[0])){
@@ -60,13 +59,13 @@ class BigTreeCommand extends BaseCommand{
                 $type = Sapling::JUNGLE;
                 break;
             default:
-                $sender->sendMessage(TextFormat::RED . "Invalid tree type, try with:\n<tree|redwood|jungle>");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2Invalid tree type, try with:\n<tree|redwood|jungle>");
                 return false;
                 break;
         }
         $tree = new BigTree();
-        $tree->placeObject($sender->getLevel(), $block->getFloorX(), ($block->getFloorY() + 1), $block->getFloorZ(), $type);
-        $sender->sendMessage(TextFormat::GREEN . "BigTree spawned!");
+        $tree->placeObject($sender->getLevel(), $block->getFloorX(), $block->getFloorY() + 1, $block->getFloorZ(), $type);
+        $sender->sendMessage(TextFormat::GREEN . "§dBigTree spawned!");
         return true;
     }
 } 

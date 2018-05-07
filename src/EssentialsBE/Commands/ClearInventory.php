@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,7 +25,7 @@ class ClearInventory extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -36,18 +39,19 @@ class ClearInventory extends BaseCommand{
                 $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                 return false;
             }elseif(!($player = $this->getAPI()->getPlayer($args[0]))){
-                $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2Player not found");
                 return false;
             }
         }
-        if(($gm = $player->getGamemode()) === 1 || $gm === 3){
-            $sender->sendMessage(TextFormat::RED . "[Error] " . (isset($args[0]) ? $player->getDisplayName() . "is" : "You are") . " in " . $this->getAPI()->getServer()->getGamemodeString($gm) . " mode");
+        if(($gm = $player->getGamemode()) === Player::SPECTATOR){
+            $sender->sendMessage(TextFormat::RED . "[Error] §3" . (isset($args[0]) ? $player->getDisplayName() . "§2is already" : "§dYou are") . " §6in §5" . $this->getAPI()->getServer()->getGamemodeString($gm) . " §6mode");
             return false;
         }
         $player->getInventory()->clearAll();
-        $player->sendMessage(TextFormat::AQUA . "Your inventory was cleared");
+		$player->getArmorInventory()->clearAll();
+        $player->sendMessage(TextFormat::AQUA . "§dYour inventory was cleared");
         if($player !== $sender){
-            $sender->sendMessage(TextFormat::AQUA . $player->getDisplayName() . (substr($player->getDisplayName(), -1, 1) === "s" ? "'" : "'s") . " inventory was cleared");
+            $sender->sendMessage(TextFormat::DARK_PURPLE . $player->getDisplayName() . (substr($player->getDisplayName(), -1, 1) === "s" ? "'" : "'s") . " §dinventory was cleared");
         }
         return true;
     }

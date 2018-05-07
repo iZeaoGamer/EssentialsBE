@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -12,7 +15,7 @@ class Compass extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "compass", "Display your current bearing direction", null, false, ["direction"]);
+        parent::__construct($api, "compass", "Display your current bearing direction", "", false, ["direction"]);
         $this->setPermission("essentials.compass");
     }
 
@@ -22,7 +25,7 @@ class Compass extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -44,11 +47,11 @@ class Compass extends BaseCommand{
                 $direction = "east";
                 break;
             default:
-                $sender->sendMessage(TextFormat::RED . "Oops, there was an error while getting your face direction");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2Oops, there was an error while getting your face direction");
                 return false;
                 break;
         }
-        $sender->sendMessage(TextFormat::AQUA . "You're facing " . TextFormat::YELLOW . $direction);
+        $sender->sendMessage(TextFormat::AQUA . "§aYou're facing §b" . TextFormat::AQUA . $direction);
         return true;
     }
 }

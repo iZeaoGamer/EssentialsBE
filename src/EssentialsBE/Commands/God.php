@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -12,7 +15,7 @@ class God extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "god", "Prevent you to take any damage", "[player]", true, ["godmode", "tgm"]);
+        parent::__construct($api, "god", "Prevent you from taking any damage", "[player]", true, ["godmode", "tgm"]);
         $this->setPermission("essentials.god.use");
     }
 
@@ -22,7 +25,7 @@ class God extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -41,9 +44,9 @@ class God extends BaseCommand{
             }
         }
         $this->getAPI()->switchGodMode($player);
-        $player->sendMessage(TextFormat::AQUA . "God mode " . ($m = $this->getAPI()->isGod($player) ? "enabled" : "disabled"));
+        $player->sendMessage(TextFormat::AQUA . "§dGod mode " . ($m = $this->getAPI()->isGod($player) ? "§5enabled" : "§3disabled"));
         if($player !== $sender){
-            $sender->sendMessage(TextFormat::AQUA . "God mode $m");
+            $sender->sendMessage(TextFormat::AQUA . "§dGod mode $m");
         }
         return true;
     }

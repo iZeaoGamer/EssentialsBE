@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -23,7 +26,7 @@ class Feed extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -33,14 +36,18 @@ class Feed extends BaseCommand{
         }
         $player = $sender;
         if(isset($args[0]) && !($player = $this->getAPI()->getPlayer($args[0]))){
-            $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2Player not found");
             return false;
         }
+	    if($player->getName() !== $sender->getName() && !$sender->hasPermission("essentials.feed.other")) {
+		    $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
+		    return false;
+	    }
         $player->setFood(20);
-        $player->getLevel()->addParticle(new HappyVillagerParticle($player->add(0, 2), 4));
-        $player->sendMessage(TextFormat::GREEN . "You have been fed!");
+        $player->getLevel()->addParticle(new HappyVillagerParticle($player->add(0, 2)));
+        $player->sendMessage(TextFormat::GREEN . "§dYou have been fed!");
         if($player !== $sender){
-            $sender->sendMessage(TextFormat::GREEN . $player->getDisplayName() . " has been fed!");
+            $sender->sendMessage(TextFormat::DARK_PURPLE . $player->getDisplayName() . " §dhas been fed!");
         }
         return true;
     }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -12,7 +15,7 @@ class Fly extends BaseCommand{
      * @param BaseAPI $api
      */
     public function __construct(BaseAPI $api){
-        parent::__construct($api, "fly", "Fly in Survival or Adventure mode!", "[player]");
+        parent::__construct($api, "fly", "Fly in Survival or Adventure mode", "[player]");
         $this->setPermission("essentials.fly.use");
     }
 
@@ -22,7 +25,7 @@ class Fly extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -36,14 +39,14 @@ class Fly extends BaseCommand{
                 $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                 return false;
             }elseif(!($player = $this->getAPI()->getPlayer($args[0]))){
-                $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
+                $sender->sendMessage(TextFormat::RED . "[Error] §2Player not found");
                 return false;
             }
         }
         $this->getAPI()->switchCanFly($player);
-        $player->sendMessage(TextFormat::YELLOW . "Flying mode " . ($this->getAPI()->canFly($player) ? "enabled" : "disabled") . "!");
+        $player->sendMessage(TextFormat::YELLOW . "§dFlying mode " . ($this->getAPI()->canFly($player) ? "§5enabled" : "§3disabled") . "!");
         if($player !== $sender){
-            $sender->sendMessage(TextFormat::YELLOW . "Flying mode " . ($this->getAPI()->canFly($player) ? "enabled" : "disabled") . " for " . $player->getDisplayName());
+            $sender->sendMessage(TextFormat::YELLOW . "§bFlying mode " . ($this->getAPI()->canFly($player) ? "§5enabled" : "§3disabled") . " §dfor §5" . $player->getDisplayName());
         }
         return true;
     }

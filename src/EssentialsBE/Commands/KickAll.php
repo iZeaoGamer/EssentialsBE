@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,12 +25,12 @@ class KickAll extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
         if(($count = count($this->getAPI()->getServer()->getOnlinePlayers())) < 1 || ($sender instanceof Player && $count < 2)){
-            $sender->sendMessage(TextFormat::RED . "[Error] There are no more players in the server");
+            $sender->sendMessage(TextFormat::RED . "[Error] §2There are no more players in the server");
             return false;
         }
         if(count($args) < 1){
@@ -36,11 +39,11 @@ class KickAll extends BaseCommand{
             $reason = implode(" ", $args);
         }
         foreach($this->getAPI()->getServer()->getOnlinePlayers() as $p){
-            if($p != $sender){
+            if($p !== $sender){
                 $p->kick($reason, false);
             }
         }
-        $sender->sendMessage(TextFormat::AQUA . "Kicked all the players!");
+        $sender->sendMessage(TextFormat::AQUA . "§dKicked all the players!");
         return true;
     }
 }
