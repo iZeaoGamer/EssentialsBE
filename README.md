@@ -1,5 +1,5 @@
 # EssentialsBE
-Based on EssentialsPE for pmmp PocketMine Servers
+Based on EssentialsPE for pmmp PocketMine (Bedrock Edition) Servers
 =========
 
 The port version of [Bukkit Essentials](http://dev.bukkit.org/bukkit-plugins/essentials/) for [PocketMine-MP Software](http://www.pmmp.io/).
