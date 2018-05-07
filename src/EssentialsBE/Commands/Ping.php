@@ -1,7 +1,10 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
-
+use pocketmine\Player;
 use EssentialsBE\BaseFiles\BaseAPI;
 use EssentialsBE\BaseFiles\BaseCommand;
 use pocketmine\command\CommandSender;
@@ -20,11 +23,14 @@ class Ping extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
-        $sender->sendMessage("Pong!");
+        if(!$sender instanceof Player){
+            return false;
+        }
+        $sender->sendMessage("ยง6" . $sender->getPing() . "ms");
         return true;
     }
 }

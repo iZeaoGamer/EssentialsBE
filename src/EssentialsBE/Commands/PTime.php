@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -23,7 +26,7 @@ class PTime extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
@@ -60,15 +63,15 @@ class PTime extends BaseCommand{
                 $sender->sendMessage(TextFormat::RED . $this->getPermissionMessage());
                 return false;
             }elseif(!($player = $this->getAPI()->getPlayer($args[1]))){
-                $sender->sendMessage(TextFormat::RED . "[Error] Player not found");
+                $sender->sendMessage(TextFormat::RED . "[Error] ยง2Player not found");
                 return false;
             }
         }
         if(!$this->getAPI()->setPlayerTime($player, (int) $time)){
-            $sender->sendMessage(TextFormat::RED . "Something went wrong while setting the time");
+            $sender->sendMessage(TextFormat::RED . "[Error] ยง2Something went wrong while setting the time");
             return false;
         }
-        $sender->sendMessage(TextFormat::GREEN . "Setting player time...");
+        $sender->sendMessage(TextFormat::GREEN . "ยง5Setting player time...");
         return false;
     }
 }

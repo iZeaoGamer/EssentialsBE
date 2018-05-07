@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Commands;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -22,16 +25,16 @@ class PvP extends BaseCommand{
      * @param array $args
      * @return bool
      */
-    public function execute(CommandSender $sender, $alias, array $args): bool{
+    public function execute(CommandSender $sender, string $alias, array $args): bool{
         if(!$this->testPermission($sender)){
             return false;
         }
-        if(!$sender instanceof Player || count($args) != 1 || !((($s = strtolower($args[0])) === "on" || (bool) $s || $s === "enable") || ($s === "off" || !((bool) $s)) || $s === "disable")){
+        if(!$sender instanceof Player || count($args) !== 1 || !((($s = strtolower($args[0])) === "on" || (bool) $s || $s === "enable") || ($s === "off" || !((bool) $s)) || $s === "disable")){
             $this->sendUsage($sender, $alias);
             return false;
         }
         $this->getAPI()->setPvP($sender, $s);
-        $sender->sendMessage(TextFormat::GREEN . "PvP mode " . ($s ? "enabled" : "disabled"));
+        $sender->sendMessage(TextFormat::GREEN . "§dPvP mode " . ($s ? "§5enabled" : "§3disabled"));
         return true;
     }
 }
