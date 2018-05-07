@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\EventHandlers;
 
 use EssentialsBE\BaseFiles\BaseEventHandler;
@@ -6,13 +9,13 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityExplodeEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\server\ServerCommandEvent;
-use pocketmine\math\Vector3;
+
 
 class OtherEvents extends BaseEventHandler{
     /**
      * @param ServerCommandEvent $event
      */
-    public function onServerCommand(ServerCommandEvent $event){
+    public function onServerCommand(ServerCommandEvent $event): void{
         $command = $this->getAPI()->colorMessage($event->getCommand());
         if($command === false){
             $event->setCancelled(true);
@@ -23,7 +26,7 @@ class OtherEvents extends BaseEventHandler{
     /**
      * @param EntityExplodeEvent $event
      */
-    public function onTNTExplode(EntityExplodeEvent $event){
+    public function onTNTExplode(EntityExplodeEvent $event): void{
         if($event->getEntity()->namedtag->getName() === "EssPE"){
             $event->setBlockList([]);
         }
@@ -34,7 +37,7 @@ class OtherEvents extends BaseEventHandler{
      *
      * @priority HIGH
      */
-    public function onBlockTap(PlayerInteractEvent $event){// PowerTool
+    public function onBlockTap(PlayerInteractEvent $event): void{// PowerTool
         if($this->getAPI()->executePowerTool($event->getPlayer(), $event->getItem())){
             $event->setCancelled(true);
         }
@@ -45,7 +48,7 @@ class OtherEvents extends BaseEventHandler{
      *
      * @priority HIGH
      */
-    public function onBlockPlace(BlockPlaceEvent $event){
+    public function onBlockPlace(BlockPlaceEvent $event): void{
         // PowerTool
         if($this->getAPI()->executePowerTool($event->getPlayer(), $event->getItem())){
             $event->setCancelled(true);
@@ -53,9 +56,9 @@ class OtherEvents extends BaseEventHandler{
 
         // Unlimited block placing
         elseif($this->getAPI()->isUnlimitedEnabled($event->getPlayer())){
-            $event->setCancelled(true);
-            $pos = new Vector3($event->getBlockReplaced()->getX(), $event->getBlockReplaced()->getY(), $event->getBlockReplaced()->getZ());
-            $event->getPlayer()->getLevel()->setBlock($pos, $event->getBlock(), true);
+            $hand = $event->getPlayer()->getInventory()->getItemInHand();
+            $hand->setCount($hand->getCount() + 1);
+            $event->getPlayer()->getInventory()->setItemInHand($hand);
         }
     }
 }
