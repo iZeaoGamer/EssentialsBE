@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Events;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -62,7 +65,7 @@ class PlayerUnlimitedModeChangeEvent extends BaseCustomEvent implements Cancella
      *
      * @param bool $mode
      */
-    public function setUnlimitedMode(bool $mode){
+    public function setUnlimitedMode(bool $mode): void{
         $this->mode = $mode;
     }
 } 

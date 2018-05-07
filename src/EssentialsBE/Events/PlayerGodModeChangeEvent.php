@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 namespace EssentialsBE\Events;
 
 use EssentialsBE\BaseFiles\BaseAPI;
@@ -62,7 +65,7 @@ class PlayerGodModeChangeEvent extends BaseCustomEvent implements Cancellable{
      *
      * @param bool $mode
      */
-    public function setGodMode(bool $mode){
+    public function setGodMode(bool $mode): void{
         $this->mode = $mode;
     }
 } 
