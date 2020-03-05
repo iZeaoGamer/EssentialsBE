@@ -1,7 +1,7 @@
 name: EssentialsBE
 main: EssentialsBE\Loader
 version: 3.1.0
-api: [3.0.0-ALPHA11, 3.0.0-ALPHA12, 3.0.0-ALPHA13]
+api: [3.0.0]
 author: HiggsInc Dev Team
 website: http://www.miners.mcpeparadise.net
 
